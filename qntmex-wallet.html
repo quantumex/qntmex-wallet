@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>QNTMEX Wallet</title>
+<style>
+:root {
+  --bg:#070705; --bg2:#0C0A05; --card:#0F0D07; --border:#1C1810; --border2:#252010;
+  --muted:#3A3520; --muted2:#60583C; --dim:#8A7E60; --text:#EDE4CC; --text2:#C8BFA8;
+  --green:#2CB67D; --red:#E05C5C; --gold:#C9A84C; --gold2:#DDB85C;
+  --gold-bg:rgba(201,168,76,0.08); --gold-bd:rgba(201,168,76,0.20);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;height:100%;overflow:hidden;}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:420px;margin:0 auto;overflow:hidden;}
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;display:none;flex-direction:column;scrollbar-width:none;}
+.screen::-webkit-scrollbar{display:none;}
+.screen.active{display:flex;animation:fu .2s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+nav{display:flex;background:var(--bg);border-top:1px solid var(--border2);padding:8px 0 12px;flex-shrink:0;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;cursor:pointer;padding:6px 0;}
+.nav-ic{font-size:20px;color:var(--muted2);transition:color .15s;}
+.nav-lb{font-size:10px;font-weight:600;color:var(--muted2);}
+.nav-btn.active .nav-ic,.nav-btn.active .nav-lb{color:var(--gold);}
+.hero{padding:20px 20px 0;flex-shrink:0;}
+.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.logo-row{display:flex;align-items:center;gap:9px;}
+.logo-txt{font-size:18px;font-weight:800;letter-spacing:3px;color:var(--gold);}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border2);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.bal-section{text-align:center;padding:4px 0 22px;}
+.bal-lbl{font-size:12px;font-weight:500;color:var(--muted2);letter-spacing:.4px;margin-bottom:10px;}
+.bal-amount{font-size:46px;font-weight:200;color:var(--text);letter-spacing:-1.5px;line-height:1;font-variant-numeric:tabular-nums;}
+.bal-sym{font-size:24px;font-weight:400;color:var(--dim);margin-right:1px;vertical-align:.15em;}
+.bal-dec{font-size:28px;font-weight:300;color:var(--muted2);}
+.bal-row{display:flex;align-items:center;justify-content:center;gap:6px;}
+.bal-eye{background:none;border:none;font-size:16px;color:var(--muted2);cursor:pointer;}
+.bal-change{margin-top:8px;font-size:13px;font-weight:600;color:var(--green);}
+.qa{display:flex;gap:10px;padding-bottom:20px;}
+.qa-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px;background:var(--card);border:1px solid var(--border2);border-radius:16px;cursor:pointer;}
+.qa-circle{width:40px;height:40px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-bd);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:18px;}
+.qa-lbl{font-size:11px;font-weight:600;color:var(--text2);}
+.divider{height:1px;background:var(--border);margin:0 20px;}
+.section{padding:20px 20px 0;} .section-last{padding-bottom:24px;}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-size:14px;font-weight:700;color:var(--text);}
+.sec-link{font-size:12px;font-weight:600;color:var(--gold);}
+.asset-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.asset-row:last-child{border-bottom:none;}
+.tok-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;border-width:1.5px;border-style:solid;}
+.tok-info{flex:1;}
+.tok-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.2;}
+.tok-bal{font-size:12px;color:var(--dim);margin-top:2px;font-variant-numeric:tabular-nums;}
+.tok-right{text-align:right;}
+.tok-usd{font-size:14px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;line-height:1.2;}
+.tok-chg{font-size:12px;font-weight:500;margin-top:2px;font-variant-numeric:tabular-nums;}
+.up{color:var(--green);}.dn{color:var(--red);}
+.tx-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);}
+.tx-row:last-child{border-bottom:none;}
+.tx-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.tx-info{flex:1;}
+.tx-lbl{font-size:14px;font-weight:600;color:var(--text);}
+.tx-sub{font-size:11px;color:var(--dim);margin-top:2px;font-family:monospace;}
+.tx-right{text-align:right;}
+.tx-amt{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;}
+.tx-time{font-size:11px;color:var(--dim);margin-top:2px;}
+.shdr{padding:20px 20px 0;flex-shrink:0;}
+.shdr-inner{display:flex;align-items:center;gap:14px;padding-bottom:20px;border-bottom:1px solid var(--border2);}
+.shdr-ico{width:44px;height:44px;border-radius:14px;background:var(--gold-bg);border:1px solid var(--gold-bd);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold);flex-shrink:0;}
+.shdr-title{font-size:22px;font-weight:700;color:var(--text);}
+.shdr-sub{font-size:12px;color:var(--dim);margin-top:2px;}
+.sbody{padding:16px 20px 24px;}
+.card{background:var(--card);border:1px solid var(--border2);border-radius:16px;overflow:hidden;}
+.sw-block{padding:16px 18px;}
+.sw-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.sw-lbl{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.7px;}
+.sw-bal{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums;}
+.sw-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.picker{display:flex;gap:5px;flex-wrap:wrap;}
+.p-chip{padding:5px 9px;border-radius:8px;border:1px solid var(--border2);font-size:11px;font-weight:600;color:var(--muted2);background:none;cursor:pointer;transition:all .12s;}
+.p-chip.active{border-color:var(--gold);background:var(--gold-bg);color:var(--gold2);}
+.sw-input{background:none;border:none;outline:none;font-family:inherit;font-size:34px;font-weight:300;color:var(--text);text-align:right;width:130px;font-variant-numeric:tabular-nums;letter-spacing:-.5px;}
+.sw-input::placeholder{color:var(--muted);}
+.sw-out{font-size:34px;font-weight:300;color:var(--gold2);text-align:right;min-width:80px;font-variant-numeric:tabular-nums;letter-spacing:-.5px;}
+.rate-ln{font-size:11px;color:var(--dim);text-align:right;margin-top:7px;font-variant-numeric:tabular-nums;}
+.flip-wrap{display:flex;align-items:center;margin:8px 0;gap:10px;}
+.flip-line{flex:1;height:1px;background:var(--border2);}
+.flip-btn{width:40px;height:40px;border-radius:12px;background:var(--gold);border:none;cursor:pointer;font-size:18px;color:#040301;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 4px 18px rgba(201,168,76,0.3);transition:transform .18s;}
+.flip-btn:active{transform:rotate(180deg) scale(.94);}
+.slip-block{padding:14px 18px;}
+.slip-lbl{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;}
+.slip-row{display:flex;gap:6px;}
+.slip-chip{padding:7px 16px;border-radius:8px;border:1px solid var(--border2);font-size:12px;font-weight:500;color:var(--muted2);background:none;cursor:pointer;font-variant-numeric:tabular-nums;transition:all .12s;}
+.slip-chip.active{border-color:var(--gold);background:var(--gold-bg);color:var(--gold2);}
+.info-grid{border:1px solid var(--border2);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+.info-row{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);}
+.info-row:last-child{border-bottom:none;}
+.ik{font-size:12px;color:var(--dim);}
+.iv{font-size:12px;font-weight:500;color:var(--text2);font-variant-numeric:tabular-nums;}
+.btn-gold{width:100%;padding:15px;border-radius:14px;border:none;background:linear-gradient(135deg,#D4AE52,#B8922E);color:#050300;font-family:inherit;font-size:15px;font-weight:700;letter-spacing:.3px;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,0.22);transition:opacity .15s,transform .1s;}
+.btn-gold:hover{opacity:.92;}
+.btn-gold:active{transform:scale(.99);}
+.btn-gold:disabled{background:var(--card);border:1px solid var(--border2);color:var(--muted2);box-shadow:none;cursor:not-allowed;opacity:1;}
+.f-lbl{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;margin-top:18px;}
+.f-lbl:first-child{margin-top:0;}
+.chip-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.chip-row::-webkit-scrollbar{display:none;}
+.tok-chip{padding:7px 14px;border-radius:20px;border:1px solid var(--border2);font-size:12px;font-weight:600;color:var(--muted2);background:none;cursor:pointer;white-space:nowrap;transition:all .12s;}
+.tok-chip.active{border-color:var(--gold);background:var(--gold-bg);color:var(--gold2);}
+.amt-card{padding:16px 18px;}
+.amt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.amt-sym{font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:.5px;}
+.max-btn{background:var(--gold-bg);border:1px solid var(--gold-bd);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;}
+.amt-input{background:none;border:none;outline:none;font-family:inherit;font-size:42px;font-weight:200;color:var(--text);width:100%;font-variant-numeric:tabular-nums;letter-spacing:-1.5px;line-height:1.1;}
+.amt-input::placeholder{color:var(--muted);}
+.amt-hint{font-size:12px;color:var(--dim);margin-top:6px;font-variant-numeric:tabular-nums;}
+.addr-card{display:flex;align-items:center;gap:10px;padding:14px 18px;}
+.addr-pre{font-size:18px;color:var(--muted2);flex-shrink:0;}
+.addr-input{flex:1;background:none;border:none;outline:none;font-family:monospace;font-size:13px;color:var(--text);}
+.addr-input::placeholder{font-family:inherit;font-size:13px;color:var(--muted2);}
+.rec-row{display:flex;align-items:center;gap:10px;border:1px solid var(--border2);border-radius:12px;padding:11px 14px;margin-top:7px;background:var(--card);cursor:pointer;}
+.rec-ico{width:30px;height:30px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-bd);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gold);flex-shrink:0;}
+.rec-addr{font-size:12px;color:var(--dim);font-family:monospace;}
+.conf-wrap{flex:1;padding:24px 20px;display:flex;flex-direction:column;}
+.back-btn{background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;margin-bottom:24px;padding:0;font-family:inherit;width:fit-content;}
+.conf-center{text-align:center;margin-bottom:28px;}
+.conf-badge{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;}
+.conf-amt{font-size:60px;font-weight:200;color:var(--gold2);letter-spacing:-2px;line-height:1;font-variant-numeric:tabular-nums;}
+.conf-tok{font-size:14px;font-weight:600;color:var(--dim);margin-top:6px;letter-spacing:.5px;}
+.conf-card{margin-bottom:20px;}
+.conf-row{display:flex;justify-content:space-between;align-items:flex-start;padding:13px 18px;border-bottom:1px solid var(--border);}
+.conf-row:last-child{border-bottom:none;}
+.ck{font-size:12px;color:var(--dim);}
+.cv{font-size:12px;font-weight:500;color:var(--text);text-align:right;max-width:58%;word-break:break-all;font-variant-numeric:tabular-nums;}
+.qr-wrap{display:flex;flex-direction:column;align-items:center;margin:16px 0 20px;}
+.qr-lbl{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:16px;}
+.qr-box{padding:16px;background:#fff;border-radius:18px;box-shadow:0 0 50px rgba(201,168,76,0.18),0 10px 40px rgba(0,0,0,.5);}
+.addr-disp{padding:16px 18px;margin-bottom:12px;}
+.addr-lbl{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px;}
+.addr-val{font-size:11px;font-family:monospace;color:var(--dim);line-height:1.8;word-break:break-all;letter-spacing:.3px;margin-bottom:14px;}
+.copy-btn{width:100%;padding:13px;border-radius:10px;border:1px solid var(--border2);background:none;font-family:inherit;font-size:13px;font-weight:600;color:var(--muted2);cursor:pointer;transition:all .18s;}
+.copy-btn:hover{border-color:var(--gold-bd);color:var(--gold);}
+.copy-btn.ok{border-color:var(--gold);color:var(--gold2);background:var(--gold-bg);}
+.warn-box{display:flex;gap:10px;border:1px solid rgba(201,168,76,.14);border-radius:12px;padding:14px;background:rgba(201,168,76,.03);}
+.warn-ico{color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn-txt{font-size:11px;color:var(--muted2);line-height:1.65;}
+.profile{display:flex;flex-direction:column;align-items:center;padding:28px 20px 22px;border-bottom:1px solid var(--border2);margin-bottom:16px;}
+.avatar{width:68px;height:68px;border-radius:50%;border:2px solid var(--gold-bd);background:var(--gold-bg);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;}
+.prof-name{font-size:17px;font-weight:700;color:var(--text);}
+.prof-addr{font-size:11px;color:var(--dim);margin-top:4px;font-family:monospace;}
+.conn-badge{margin-top:10px;background:rgba(44,182,125,.1);border:1px solid rgba(44,182,125,.25);border-radius:20px;padding:5px 14px;}
+.conn-txt{font-size:11px;font-weight:600;color:var(--green);}
+.set-sec{margin-bottom:16px;padding:0 20px;}
+.set-title{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:.9px;text-transform:uppercase;margin-bottom:8px;}
+.set-row{display:flex;align-items:center;padding:14px 16px;gap:12px;border-bottom:1px solid var(--border);cursor:pointer;}
+.set-row:last-child{border-bottom:none;}
+.set-ico{font-size:16px;color:var(--gold);width:20px;text-align:center;flex-shrink:0;}
+.set-info{flex:1;}
+.set-lbl{font-size:13px;font-weight:500;color:var(--text);}
+.set-sub{font-size:11px;color:var(--dim);margin-top:2px;}
+.set-r{color:var(--muted2);font-size:18px;}
+.pref-v{font-size:13px;font-weight:600;color:var(--gold);}
+.toggle{width:46px;height:26px;border-radius:13px;position:relative;cursor:pointer;border:none;transition:background .18s;flex-shrink:0;}
+.toggle-k{width:20px;height:20px;border-radius:50%;position:absolute;top:3px;transition:left .18s cubic-bezier(.16,1,.3,1);}
+.toggle.on{background:var(--gold);}
+.toggle.on .toggle-k{left:23px;background:#040301;}
+.toggle.off{background:var(--border2);}
+.toggle.off .toggle-k{left:3px;background:var(--muted2);}
+.disc-btn{width:calc(100% - 40px);margin:4px 20px 24px;padding:14px;border-radius:14px;border:1px solid rgba(224,92,92,.2);background:rgba(224,92,92,.06);color:var(--red);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--card);border:1px solid var(--gold-bd);color:var(--gold2);padding:9px 20px;border-radius:20px;font-size:12px;font-weight:600;pointer-events:none;opacity:0;transition:opacity .2s,transform .2s;z-index:999;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+body.light{--bg:#F5EFE2;--bg2:#EDE5D2;--card:#FFFFFF;--border:#E2D8C0;--border2:#CEC5A8;--muted:#C0B898;--muted2:#8A7E60;--dim:#6A6048;--text:#1A1608;--text2:#3A3220;--green:#1A7A46;--red:#C02828;--gold-bg:rgba(201,168,76,.1);--gold-bd:rgba(201,168,76,.28);}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div class="screen active" id="screen-home">
+  <div class="hero">
+    <div class="hero-top">
+      <div class="logo-row">
+        <svg width="26" height="31" viewBox="0 0 100 120" fill="none">
+          <path d="M5 38L15 13L35 33L50 8L65 33L85 13L95 38Z" fill="#C9A84C"/>
+          <rect x="5" y="35" width="90" height="9" rx="2" fill="#C9A84C"/>
+          <circle cx="15" cy="12" r="6" fill="#C9A84C"/>
+          <circle cx="50" cy="7" r="6" fill="#C9A84C"/>
+          <circle cx="85" cy="12" r="6" fill="#C9A84C"/>
+          <circle cx="50" cy="80" r="28" stroke="#C9A84C" stroke-width="9"/>
+          <line x1="66" y1="95" x2="82" y2="113" stroke="#C9A84C" stroke-width="9" stroke-linecap="round"/>
+        </svg>
+        <span class="logo-txt">QNTMEX</span>
+      </div>
+      <button class="icon-btn" id="theme-btn" onclick="toggleTheme()">&#127769;</button>
+    </div>
+    <div class="bal-section">
+      <div class="bal-lbl">Total Balance</div>
+      <div class="bal-row">
+        <div id="bal-display"><span class="bal-amount"><span class="bal-sym">$</span>28,261<span class="bal-dec">.67</span></span></div>
+        <button class="bal-eye" id="bal-eye" onclick="toggleBal()">&#128065;</button>
+      </div>
+      <div class="bal-change">&#9650; $1,204.32 &nbsp;(+4.45%)</div>
+    </div>
+    <div class="qa">
+      <button class="qa-btn" onclick="goTo('send')"><div class="qa-circle">&#8593;</div><span class="qa-lbl">Send</span></button>
+      <button class="qa-btn" onclick="goTo('receive')"><div class="qa-circle">&#8595;</div><span class="qa-lbl">Receive</span></button>
+      <button class="qa-btn" onclick="goTo('swap')"><div class="qa-circle">&#8644;</div><span class="qa-lbl">Swap</span></button>
+      <button class="qa-btn"><div class="qa-circle">+</div><span class="qa-lbl">Buy</span></button>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="section"><div class="sec-hdr"><span class="sec-title">Assets</span><span class="sec-link">See all</span></div><div id="assets-list"></div></div>
+  <div class="divider" style="margin-top:4px"></div>
+  <div class="section section-last"><div class="sec-hdr" style="margin-top:4px"><span class="sec-title">Recent Activity</span><span class="sec-link">See all</span></div><div id="tx-list"></div></div>
+</div>
+
+<div class="screen" id="screen-swap">
+  <div class="shdr"><div class="shdr-inner"><div class="shdr-ico">&#8644;</div><div><div class="shdr-title">Swap</div><div class="shdr-sub">Instant Exchange</div></div></div></div>
+  <div class="sbody" style="display:flex;flex-direction:column;gap:0">
+    <div class="card sw-block">
+      <div class="sw-top"><span class="sw-lbl">From</span><span class="sw-bal" id="from-bal">Balance: 4.2081 ETH</span></div>
+      <div class="sw-row"><div class="picker" id="from-picker"></div><input class="sw-input" id="sw-amt" type="number" placeholder="0.00" oninput="calcSwap()"></div>
+    </div>
+    <div class="flip-wrap"><div class="flip-line"></div><button class="flip-btn" onclick="flipSwap()">&#8645;</button><div class="flip-line"></div></div>
+    <div class="card sw-block">
+      <div class="sw-top"><span class="sw-lbl">To</span><span class="sw-bal" id="to-bal">Balance: 50,000 QNTM</span></div>
+      <div class="sw-row"><div class="picker" id="to-picker"></div><div class="sw-out" id="sw-out">0.00</div></div>
+      <div class="rate-ln" id="rate-txt">1 ETH &#8776; 11,905 QNTM</div>
+    </div>
+    <div class="card slip-block" style="margin-top:12px">
+      <div class="slip-lbl">Slippage</div>
+      <div class="slip-row">
+        <button class="slip-chip active" onclick="setSlip(this)">0.1%</button>
+        <button class="slip-chip" onclick="setSlip(this)">0.5%</button>
+        <button class="slip-chip" onclick="setSlip(this)">1.0%</button>
+      </div>
+    </div>
+    <div class="info-grid" style="margin-top:12px">
+      <div class="info-row"><span class="ik">Route</span><span class="iv">Uniswap V3</span></div>
+      <div class="info-row"><span class="ik">Est. Gas</span><span class="iv">~$4.20</span></div>
+      <div class="info-row"><span class="ik">Price Impact</span><span class="iv up">&lt; 0.01%</span></div>
+    </div>
+    <button class="btn-gold" id="sw-btn" onclick="toast('Swap simulated')" disabled>Review Swap</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-send">
+  <div id="send1">
+    <div class="shdr"><div class="shdr-inner"><div class="shdr-ico">&#8593;</div><div><div class="shdr-title">Send</div><div class="shdr-sub">Transfer Tokens</div></div></div></div>
+    <div class="sbody">
+      <div class="f-lbl">Token</div>
+      <div class="chip-row" id="send-chips"></div>
+      <div class="f-lbl" style="margin-top:16px">Amount</div>
+      <div class="card amt-card">
+        <div class="amt-top"><span class="amt-sym" id="amt-sym">ETH</span><button class="max-btn" onclick="setMax()">MAX</button></div>
+        <input class="amt-input" id="send-amt" type="number" placeholder="0.00" oninput="chkSend()">
+        <div class="amt-hint" id="send-bal">Available: 4.2081 ETH</div>
+      </div>
+      <div class="f-lbl" style="margin-top:16px">Recipient</div>
+      <div class="card addr-card"><span class="addr-pre">&#9906;</span><input class="addr-input" id="send-addr" type="text" placeholder="0x address or ENS name" oninput="chkSend()"></div>
+      <div class="f-lbl" style="margin-top:16px">Recent</div>
+      <div id="recent-list"></div>
+      <div style="margin-top:20px"><button class="btn-gold" id="review-btn" onclick="goConfirm()" disabled>Review Transaction</button></div>
+    </div>
+  </div>
+  <div id="send2" style="display:none;flex:1;flex-direction:column">
+    <div class="conf-wrap">
+      <button class="back-btn" onclick="backSend()">&#8592; Back</button>
+      <div class="conf-center">
+        <div class="conf-badge">Confirm Send</div>
+        <div class="conf-amt" id="conf-amt">0.00</div>
+        <div class="conf-tok" id="conf-tok">ETH</div>
+      </div>
+      <div class="card conf-card">
+        <div class="conf-row"><span class="ck">To</span><span class="cv" id="conf-to">&#8212;</span></div>
+        <div class="conf-row"><span class="ck">Network</span><span class="cv">Ethereum Mainnet</span></div>
+        <div class="conf-row"><span class="ck">Network Fee</span><span class="cv">~$4.20</span></div>
+        <div class="conf-row"><span class="ck">Total</span><span class="cv" id="conf-total">&#8212;</span></div>
+      </div>
+      <button class="btn-gold" onclick="toast('Transaction broadcast')">Confirm &amp; Send</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-receive">
+  <div class="shdr"><div class="shdr-inner"><div class="shdr-ico">&#8595;</div><div><div class="shdr-title">Receive</div><div class="shdr-sub">Your Address</div></div></div></div>
+  <div class="sbody">
+    <div class="chip-row" id="rec-chips" style="margin-bottom:4px"></div>
+    <div class="qr-wrap">
+      <div class="qr-lbl" id="qr-lbl">Scan to send ETH</div>
+      <div class="qr-box">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <rect width="180" height="180" fill="#fff"/>
+          <rect x="20" y="20" width="10" height="10" rx="1" fill="#070705"/><rect x="32" y="20" width="10" height="10" rx="1" fill="#070705"/><rect x="44" y="20" width="10" height="10" rx="1" fill="#070705"/><rect x="56" y="20" width="10" height="10" rx="1" fill="#070705"/><rect x="68" y="20" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="20" y="32" width="10" height="10" rx="1" fill="#070705"/><rect x="68" y="32" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="20" y="44" width="10" height="10" rx="1" fill="#070705"/><rect x="44" y="44" width="10" height="10" rx="1" fill="#070705"/><rect x="68" y="44" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="20" y="56" width="10" height="10" rx="1" fill="#070705"/><rect x="44" y="56" width="10" height="10" rx="1" fill="#070705"/><rect x="68" y="56" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="20" y="68" width="10" height="10" rx="1" fill="#070705"/><rect x="32" y="68" width="10" height="10" rx="1" fill="#070705"/><rect x="44" y="68" width="10" height="10" rx="1" fill="#070705"/><rect x="56" y="68" width="10" height="10" rx="1" fill="#070705"/><rect x="68" y="68" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="92" y="20" width="10" height="10" rx="1" fill="#070705"/><rect x="116" y="20" width="10" height="10" rx="1" fill="#070705"/><rect x="140" y="20" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="92" y="32" width="10" height="10" rx="1" fill="#070705"/><rect x="104" y="32" width="10" height="10" rx="1" fill="#070705"/><rect x="128" y="32" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="80" y="44" width="10" height="10" rx="1" fill="#070705"/><rect x="104" y="44" width="10" height="10" rx="1" fill="#070705"/><rect x="116" y="44" width="10" height="10" rx="1" fill="#070705"/><rect x="140" y="44" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="80" y="56" width="10" height="10" rx="1" fill="#070705"/><rect x="92" y="56" width="10" height="10" rx="1" fill="#070705"/><rect x="128" y="56" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="80" y="80" width="10" height="10" rx="1" fill="#070705"/><rect x="104" y="80" width="10" height="10" rx="1" fill="#070705"/><rect x="128" y="80" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="92" y="92" width="10" height="10" rx="1" fill="#070705"/><rect x="116" y="92" width="10" height="10" rx="1" fill="#070705"/><rect x="140" y="92" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="80" y="104" width="10" height="10" rx="1" fill="#070705"/><rect x="104" y="104" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="80" y="116" width="10" height="10" rx="1" fill="#070705"/><rect x="92" y="116" width="10" height="10" rx="1" fill="#070705"/><rect x="116" y="116" width="10" height="10" rx="1" fill="#070705"/><rect x="128" y="116" width="10" height="10" rx="1" fill="#070705"/><rect x="140" y="116" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="20" y="92" width="10" height="10" rx="1" fill="#070705"/><rect x="44" y="92" width="10" height="10" rx="1" fill="#070705"/><rect x="56" y="92" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="20" y="104" width="10" height="10" rx="1" fill="#070705"/><rect x="32" y="104" width="10" height="10" rx="1" fill="#070705"/><rect x="56" y="104" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="20" y="116" width="10" height="10" rx="1" fill="#070705"/><rect x="44" y="116" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="20" y="128" width="10" height="10" rx="1" fill="#070705"/><rect x="32" y="128" width="10" height="10" rx="1" fill="#070705"/><rect x="56" y="128" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="20" y="140" width="10" height="10" rx="1" fill="#070705"/><rect x="44" y="140" width="10" height="10" rx="1" fill="#070705"/><rect x="56" y="140" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="92" y="128" width="10" height="10" rx="1" fill="#070705"/><rect x="116" y="128" width="10" height="10" rx="1" fill="#070705"/><rect x="140" y="128" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="104" y="140" width="10" height="10" rx="1" fill="#070705"/><rect x="128" y="140" width="10" height="10" rx="1" fill="#070705"/>
+          <rect x="16" y="16" width="56" height="56" rx="6" fill="none" stroke="#070705" stroke-width="4"/>
+          <rect x="26" y="26" width="36" height="36" rx="3" fill="#070705"/>
+          <rect x="32" y="32" width="24" height="24" rx="2" fill="#fff"/>
+          <rect x="36" y="36" width="16" height="16" rx="2" fill="#070705"/>
+          <rect x="108" y="16" width="56" height="56" rx="6" fill="none" stroke="#070705" stroke-width="4"/>
+          <rect x="118" y="26" width="36" height="36" rx="3" fill="#070705"/>
+          <rect x="124" y="32" width="24" height="24" rx="2" fill="#fff"/>
+          <rect x="128" y="36" width="16" height="16" rx="2" fill="#070705"/>
+          <rect x="16" y="108" width="56" height="56" rx="6" fill="none" stroke="#070705" stroke-width="4"/>
+          <rect x="26" y="118" width="36" height="36" rx="3" fill="#070705"/>
+          <rect x="32" y="124" width="24" height="24" rx="2" fill="#fff"/>
+          <rect x="36" y="128" width="16" height="16" rx="2" fill="#070705"/>
+          <circle cx="90" cy="90" r="14" fill="#fff"/>
+          <text x="90" y="96" text-anchor="middle" font-size="16" fill="#C9A84C">&#9819;</text>
+        </svg>
+      </div>
+    </div>
+    <div class="card addr-disp">
+      <div class="addr-lbl">Wallet Address</div>
+      <div class="addr-val">0x3F5aCd91B4b12C6B9D3F2E8a7C4D0E9F2B1A5C8</div>
+      <button class="copy-btn" id="copy-btn" onclick="copyAddr()">Copy Address</button>
+    </div>
+    <div class="warn-box"><span class="warn-ico">&#9888;</span><span class="warn-txt">Only send ERC-20 compatible tokens to this address. Sending other assets may result in permanent loss of funds.</span></div>
+  </div>
+</div>
+
+<div class="screen" id="screen-settings">
+  <div class="profile">
+    <div class="avatar">&#9819;</div>
+    <div class="prof-name">QNTMEX Wallet</div>
+    <div class="prof-addr">0x3F5a...A5C8</div>
+    <div class="conn-badge"><span class="conn-txt">&#9679; Connected</span></div>
+  </div>
+  <div class="set-sec"><div class="set-title">Appearance</div><div class="card"><div class="set-row"><span class="set-ico">&#9682;</span><div class="set-info"><div class="set-lbl">Dark Mode</div><div class="set-sub">Toggle light / dark</div></div><button class="toggle on" id="dark-t" onclick="toggleTheme()"><div class="toggle-k"></div></button></div></div></div>
+  <div class="set-sec"><div class="set-title">Security</div><div class="card">
+    <div class="set-row"><span class="set-ico">&#11041;</span><div class="set-info"><div class="set-lbl">Biometric Auth</div><div class="set-sub">Face ID / Fingerprint</div></div><button class="toggle on" id="bio-t" onclick="togSet('bio-t')"><div class="toggle-k"></div></button></div>
+    <div class="set-row"><span class="set-ico">&#11041;</span><div class="set-info"><div class="set-lbl">Change PIN</div></div><span class="set-r">&#8250;</span></div>
+    <div class="set-row"><span class="set-ico">&#11041;</span><div class="set-info"><div class="set-lbl">Recovery Phrase</div><div class="set-sub">View 12-word backup</div></div><span class="set-r">&#8250;</span></div>
+  </div></div>
+  <div class="set-sec"><div class="set-title">Preferences</div><div class="card">
+    <div class="set-row"><span class="set-ico">&#9672;</span><div class="set-info"><div class="set-lbl">Currency</div></div><span class="pref-v">USD &#8250;</span></div>
+    <div class="set-row"><span class="set-ico">&#9672;</span><div class="set-info"><div class="set-lbl">Network</div></div><span class="pref-v">Mainnet &#8250;</span></div>
+    <div class="set-row"><span class="set-ico">&#9672;</span><div class="set-info"><div class="set-lbl">Hide Small Balances</div></div><button class="toggle off" id="small-t" onclick="togSet('small-t')"><div class="toggle-k"></div></button></div>
+  </div></div>
+  <div class="set-sec"><div class="set-title">Notifications</div><div class="card"><div class="set-row"><span class="set-ico">&#9671;</span><div class="set-info"><div class="set-lbl">Transaction Alerts</div><div class="set-sub">Sends &amp; receives</div></div><button class="toggle on" id="notif-t" onclick="togSet('notif-t')"><div class="toggle-k"></div></button></div></div></div>
+  <div class="set-sec"><div class="set-title">About</div><div class="card">
+    <div class="set-row"><span class="set-ico">&#9678;</span><div class="set-info"><div class="set-lbl">Version</div></div><span style="font-size:12px;color:var(--dim)">1.0.0</span></div>
+    <div class="set-row"><span class="set-ico">&#9678;</span><div class="set-info"><div class="set-lbl">Terms of Service</div></div><span class="set-r">&#8250;</span></div>
+    <div class="set-row"><span class="set-ico">&#9678;</span><div class="set-info"><div class="set-lbl">Privacy Policy</div></div><span class="set-r">&#8250;</span></div>
+  </div></div>
+  <button class="disc-btn" onclick="toast('Wallet disconnected')">Disconnect Wallet</button>
+</div>
+
+<nav>
+  <button class="nav-btn active" id="nav-home" onclick="goTo('home')"><span class="nav-ic">&#8962;</span><span class="nav-lb">Home</span></button>
+  <button class="nav-btn" id="nav-swap" onclick="goTo('swap')"><span class="nav-ic">&#8644;</span><span class="nav-lb">Swap</span></button>
+  <button class="nav-btn" id="nav-send" onclick="goTo('send')"><span class="nav-ic">&#8593;</span><span class="nav-lb">Send</span></button>
+  <button class="nav-btn" id="nav-receive" onclick="goTo('receive')"><span class="nav-ic">&#8595;</span><span class="nav-lb">Receive</span></button>
+  <button class="nav-btn" id="nav-settings" onclick="goTo('settings')"><span class="nav-ic">&#9881;</span><span class="nav-lb">Settings</span></button>
+</nav>
+</div>
+<div id="toast"></div>
+<script>
+var T=[
+  {s:'|ETH', n:'Ethereum',    b:'4.2081',  u:'$14,203.18',c:'#627EEA',sp:[3,4,3.5,5,4.8,6,5.5,6.2],ch:'+2.40%',up:1},
+  {s:'USDT',n:'Tether',      b:'3,200.00',u:'$3,200.00', c:'#26A17B',sp:[4,4,4.1,4,4,4.1,4,4],   ch:'+0.01%',up:1},
+  {s:'QNTM',n:'QNTMEX',      b:'50,000',  u:'$8,750.00', c:'#C9A84C',sp:[2,3,4,3.5,5,6,7,8],     ch:'+12.30%',up:1},
+  {s:'LINK',n:'Chainlink',   b:'142.50',  u:'$2,108.25', c:'#2A5ADA',sp:[5,4,4.5,3.8,4.2,3.5,4,3.8],ch:'-1.20%',up:0},
+  {s:'WBTC',n:'Wrapped BTC', b:'0.0850',  u:'$5,610.44', c:'#F7931A',sp:[4,5,4.5,6,5.5,7,6.5,8], ch:'+3.10%',up:1}
+];
+var TX=[
+  {ic:'&#8595;',lb:'Received ETH',   sub:'From 0x4f3a...b12c',amt:'+0.5000 ETH',   t:#2h ago',up:1},
+  {ic:'&#8593;',lb:'Sent USDT',      sub:'To 0x9d1e...44fa',  amt:'-500.00 USDT',  t:'5h ago',up:0},
+  {ic:'&#8644;',lb:'Swapped to QNTM',sub:'ETH &#8594; QNTM', amt:'+10,000 QNTM',  t:'1d ago',up:1},
+  {ic:'&#8595;',lb:'Received LINK',  sub:'From 0x7c2b...991d',amt:'+25.00 LINK',   t:'2d ago',up:1}
+];
+var B={ETH:'4.2081',USDT:'3200',QNTM:'50000',LINK:'142.5',WBTC:'0.085'};
+var R={'ETH-QNTM':11905,'ETH-USDT':3375,'ETH-LINK':228,'USDT-QNTM':3.5,'QNTM-USDT':0.175};
+var RC=['0x4f3a...b12c','0x9d1e...44fa','vitalik.eth'];
+var bv=1,fT='ETH',tT='QNTM',sT='ETH',rT='ETH',dk=1;
+
+function sp(d,c){
+  var mn=Math.min.apply(0,d),mx=Math.max.apply(0,d),r=mx-mn||1;
+  var pts=d.map(function(v,i){return (i/(d.length-1)*58)+','+(26-((v-mn)/r)*26);}).join(' ');
+  return '<svg width="58" height="26" style="flex-shrink:0"><polyline points="'+pts+'" fill="none" stroke="'+c+'" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+}
+
+function init(){
+  var al=document.getElementById('assets-list');
+  T.forEach(function(t){al.innerHTML+='<div class="asset-row"><div class="tok-icon" style="background:'+t.c+'14;border-color:'+t.c+'35;color:'+t.c+'">'+t.s.slice(0,2)+'</div><div class="tok-info"><div class="tok-name">'+t.n+'</div><div class="tok-bal">'+t.b+' '+t.s+'</div></div>'+sp(t.sp,t.c)+'<div class="tok-right"><div class="tok-usd">'+t.u+'</div><div class="tok-chg '+(t.up?'up':'dn')+'">'+t.ch+'</div></div></div>';});
+  var txl=document.getElementById('tx-list');
+  TX.forEach(function(x){var bg=x.up?'rgba(44,182,125,.1)':'rgba(224,92,92,.1)';var bc=x.up?'rgba(44,182,125,.22)':'rgba(224,92,92,.22)';var c=x.up?'var(--green)':'var(--red)';txl.innerHTML+='<div class="tx-row"><div class="tx-icon" style="background:'+bg+';border:1px solid '+bc+';color:'+c+'">'+x.ic+'</div><div class="tx-info"><div class="tx-lbl">'+x.lb+'</div><div class="tx-sub">'+x.sub+'</div></div><div class="tx-right"><div class="tx-amt '+(x.up?'up':'dn')+'">'+x.amt+'</div><div class="tx-time">'+x.t+'</div></div></div>';});
+  bP('from-picker',1);bP('to-picker',0);
+  var sc=document.getElementById('send-chips');
+  T.forEach(function(t){var b=document.createElement('button');var a=t.s===sT;b.className='tok-chip'+(a?' active':'');if(a)b.style.cssText='border-color:'+t.c+';background:'+t.c+'18;color:'+t.c;b.textContent=t.s;b.onclick=function(){sT=t.s;rS();};sc.appendChild(b);});
+  var rc2=document.getElementById('rec-chips');
+  T.forEach(function(t){var b=document.createElement('button');var a=t.s===rT;b.className='tok-chip'+(a?' active':'');if(a)b.style.cssText='border-color:'+t.c+';background:'+t.c+'18;color:'+t.c;b.textContent=t.s;b.onclick=function(){rT=t.s;rR();};rc2.appendChild(b);});
+  var rl=document.getElementById('recent-list');
+  RC.forEach(function(addr){rl.innerHTML+='<div class="rec-row" onclick="document.getElementById(\'send-addr\').value=\''+addr+'\';chkSend()"><div class="rec-ico">&#9672;</div><span class="rec-addr">'+addr+'</span></div>';});
+}
+
+function bP(id,isF){var el=document.getElementById(id);el.innerHTML='';T.forEach(function(t){var b=document.createElement('button');var a=isF?t.s===fT:t.s===tT;b.className='p-chip'+(a?' active':'');b.textContent=t.s;b.onclick=function(){if(isF)fT=t.s;else tT=t.s;bP('from-picker',1);bP('to-picker',0);uSw();calcSwap();};el.appendChild(b);});}
+function goTo(s){document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('active');});document.querySelectorAll('.nav-btn').forEach(function(x){x.classList.remove('active');});document.getElementById('screen-'+s).classList.add('active');document.getElementById('nav-'+s).classList.add('active');}
+function toggleBal(){bv=!bv;document.getElementById('bal-display').innerHTML=bv?'<span class="bal-amount"><span class="bal-sym">$</span>28,261<span class="bal-dec">.67</span></span>':'<span style="font-size:28px;letter-spacing:4px;color:var(--muted2)">&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;</span>';document.getElementById('bal-eye').innerHTML=bv?'&#128065;':'&#128274;';}
+function toggleTheme(){dk=!dk;document.body.classList.toggle('light',!dk);document.getElementById('theme-btn').innerHTML=dk?'&#127769;':'&#9728;';var dt=document.getElementById('dark-t');if(dt)dt.className='toggle '+(dk?'on':'off');}
+function togSet(id){var el=document.getElementById(id);el.className='toggle '+(el.classList.contains('on')?'off':'on');}
+function gR(){var k=fT+'-'+tT,r=tT+'-'+fT;if(R[k])return R[k];if(R[r])return 1/R[r];return 1;}
+function uSw(){var rate=gR();document.getElementById('rate-txt').textContent='1 '+fT+' \u2248 '+rate.toLocaleString()+' '+tT;document.getElementById('from-bal').textContent='Balance: '+(B[fT]||'\u2014')+' '+fT;document.getElementById('to-bal').textContent='Balance: '+(B[tT]||'\u2014')+' '+tT;}
+function calcSwap(){var a=parseFloat(document.getElementById('sw-amt').value)||0;document.getElementById('sw-out').textContent=a?(a*gR()).toLocaleString(undefined,{maximumFractionDigits:4}):'0.00';document.getElementById('sw-btn').disabled=!a;}
+function flipSwap(){var tmp=fT;fT=tT;tT=tmp;bP('from-picker',1);bP('to-picker',0);document.getElementById('sw-amt').value='';document.getElementById('sw-out').textContent='0.00';document.getElementById('sw-btn').disabled=1;uSw();}
+function setSlip(el){document.querySelectorAll('.slip-chip').forEach(function(c){c.classList.remove('active');});el.classList.add('active');}
+function rS(){document.querySelectorAll('#send-chips .tok-chip').forEach(function(b){var t=T.find(function(x){return x.s===b.textContent;});var a=b.textContent===sT;b.className='tok-chip'+(a?' active':'');b.style.cssText=a?'border-color:'+t.c+';background:'+t.c+'18;color:'+t.c:'';});document.getElementById('send-bal').textContent='Available: '+(B[sT]||'\u2014')+' '+sT;document.getElementById('amt-sym').textContent=sT;chkSend();}
+function rR(){document.querySelectorAll('#rec-chips .tok-chip').forEach(function(b){var t=T.find(function(x){return x.s===b.textContent;});var a=b.textContent===rT;b.className='tok-chip'+(a?' active':'');b.style.cssText=a?'border-color:'+t.c+';background:'+t.c+'18;color:'+t.c:'';});document.getElementById('qr-lbl').textContent='Scan to send '+rT;}
+function setMax(){document.getElementById('send-amt').value=B[sT];chkSend();}
+function chkSend(){document.getElementById('review-btn').disabled=!(document.getElementById('send-amt').value&&document.getElementById('send-addr').value);}
+function goConfirm(){var a=document.getElementById('send-amt').value,addr=document.getElementById('send-addr').value;document.getElementById('conf-amt').textContent=a;document.getElementById('conf-tok').textContent=sT;document.getElementById('conf-to').textContent=addr;document.getElementById('conf-total').textContent=a+' '+sT+' + gas';document.getElementById('send1').style.display='none';document.getElementById('send2').style.display='flex';}
+function backSend(){document.getElementById('send1').style.display='block';document.getElementById('send2').style.display='none';}
+function copyAddr(){try{navigator.clipboard.writeText('0x3F5aCd91B4b12C6B9D3F2E8a7C4D0E9F2B1A5C8');}catch(e){}var b=document.getElementById('copy-btn');b.textContent='\u2713 Copied!';b.classList.add('ok');toast('Address copied');setTimeout(function(){b.textContent='Copy Address';b.classList.remove('ok');},2000);}
+function toast(m){var el=document.getElementById('toast');el.textContent=m;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},2200);}
+
+init();uSw();
+</script>
+</body>
+</html>
