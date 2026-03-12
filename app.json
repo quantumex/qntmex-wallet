@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "QNTMEX Wallet",
+    "slug": "qntmex-wallet",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#070705"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.qntmex.wallet"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#070705"
+      },
+      "package": "com.qntmex.wallet"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-linear-gradient"
+    ]
+  }
+}
