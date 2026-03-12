@@ -6,4 +6,10 @@ npm-debug.*
 *.p8
 *.p12
 *.key
-*.keystore
+*.mobileprovision
+*.orig.*
+web-build/
+.env
+.env.local
+.DS_Store
+*.log

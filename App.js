@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 import HomeScreen from './src/screens/HomeScreen';
 import SwapScreen from './src/screens/SwapScreen';
@@ -13,14 +12,7 @@ import ReceiveScreen from './src/screens/ReceiveScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
-
-const NAV_ICONS = {
-  Home: '⌂',
-  Swap: '⇄',
-  Send: '↑',
-  Receive: '↓',
-  Settings: '⚙',
-};
+const NAV_ICONS = { Home: '⌂', Swap: '⇄', Send: '↑', Receive: '↓', Settings: '⚙' };
 
 function TabIcon({ name, focused, color }) {
   return (
@@ -33,7 +25,6 @@ function TabIcon({ name, focused, color }) {
 
 function AppNavigator() {
   const { theme, isDark } = useTheme();
-
   return (
     <>
       <StatusBar style={isDark ? 'light' : 'dark'} />
@@ -42,17 +33,8 @@ function AppNavigator() {
           screenOptions={({ route }) => ({
             headerShown: false,
             tabBarShowLabel: false,
-            tabBarStyle: {
-              backgroundColor: theme.navBg,
-              borderTopColor: theme.border,
-              borderTopWidth: 1,
-              height: 64,
-              paddingBottom: 8,
-              paddingTop: 6,
-            },
-            tabBarIcon: ({ focused, color }) => (
-              <TabIcon name={route.name} focused={focused} color={color} />
-            ),
+            tabBarStyle: { backgroundColor: theme.navBg, borderTopColor: theme.border, borderTopWidth: 1, height: 64, paddingBottom: 8, paddingTop: 6 },
+            tabBarIcon: ({ focused, color }) => <TabIcon name={route.name} focused={focused} color={color} />,
             tabBarActiveTintColor: theme.gold,
             tabBarInactiveTintColor: theme.muted,
           })}
