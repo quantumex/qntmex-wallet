@@ -65,16 +65,16 @@ export default function TransactionDetails() {
             <Text style={[st.typeTx,{color}]}>{out?"↑ Sent":"↓ Received"}</Text>
           </View>
           <Text style={[st.amt,{color}]}>{out?"-":"+"}  {tx.amount} {tx.symbol}</Text>
-          {tx.fiatValue && <Text style={st.fiat}>≈ ${tx.fiatValue}</Text>}
+          {tx.fiatValue && <Text style={st.fiat}>≈ $ {tx.fiatValue}</Text>}
           <View style={st.stRow}>
             <View style={[st.stDot,{backgroundColor:sc}]}/>
             <Text style={[st.stTx,{color:sc}]}>{tx.status.charAt(0).toUpperCase()+tx.status.slice(1)}</Text>
           </View>
         </View>
 
-        {/* timeline steps */}
+        {/* timeline */}
         <View style={st.steps}>
-          {[{lbl:"Transaction Submitted",tm:date.toLocaleTimeString()},{lbl:"Network Processing",tm:"~30 seconds"},{lbl:"Confirmed on Chain",tm:date.toLocaleDateString()}].map((s,i,arr) => (
+          {[{ lbl:"Transaction Submitted", tm:date.toLocaleTimeString() },{ lbl:"Network Processing", tm:"~30 seconds" },{ lbl:"Confirmed on Chain", tm:date.toLocaleDateString() }].map((s,i,arr) => (
             <View key={i} style={st.step}>
               <View style={st.stepCol}>
                 <View style={[st.stepDot, tx.status!=="pending"&&st.stepDotDone]}><Text style={st.stepCheck}>✓</Text></View>
