@@ -70,7 +70,7 @@ export default function AccountInfo() {
         </View>
 
         <View style={{ paddingHorizontal:20, marginTop:18 }}>
-          <Pressable style={st.btnRed= onPress={() => Alert.alert("Remove Wallet","This will delete all wallet data. Make sure you have your recovery phrase.", [{text:"Cancel",style:"cancel"},{text:"Remove",style:"destructive",onPress:()=>router.replace("/(auth)/onboarding")}])}>
+          <Pressable style={st.btnRed} onPress={() => Alert.alert("Remove Wallet","This will delete all wallet data. Make sure you have your recovery phrase.", [{text:"Cancel",style:"cancel"},{text:"Remove",style:"destructive",onPress:()=>router.replace("/(auth)/onboarding")}])}>
             <Text style={st.btnRedTx}>Remove Wallet</Text>
           </Pressable>
         </View>
