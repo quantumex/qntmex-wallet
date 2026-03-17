@@ -14,21 +14,28 @@ const SLIDES = [
 export default function Onboarding() {
   const router = useRouter();
   const [slide, setSlide] = useState(0);
+
   const next = () => {
     if (slide < SLIDES.length - 1) setSlide(slide + 1);
     else router.push("/(auth)/seed-intro");
   };
+
   return (
     <View style={st.container}>
       <View style={st.wrap}>
+        {/* ob-icon */}
         <Text style={st.icon}>♟</Text>
+        {/* ob-dots */}
         <View style={st.dots}>
           {SLIDES.map((_, i) => (
             <View key={i} style={[st.dot, i === slide ? st.dotOn : st.dotOff]} />
           ))}
         </View>
+        {/* ob-title */}
         <Text style={st.title}>{SLIDES[slide].title}</Text>
+        {/* ob-sub */}
         <Text style={st.sub}>{SLIDES[slide].sub}</Text>
+        {/* ob-btns */}
         <View style={st.btns}>
           <Pressable style={st.btnGold} onPress={next} testID="onboarding-create-button">
             <Text style={st.btnGoldTx}>{slide === SLIDES.length - 1 ? "Create Wallet" : "Get Started"}</Text>
@@ -41,6 +48,7 @@ export default function Onboarding() {
     </View>
   );
 }
+
 const st = StyleSheet.create({
   container: { flex: 1, backgroundColor: C.bg },
   wrap: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 28, paddingVertical: 40 },
