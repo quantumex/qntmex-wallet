@@ -24,9 +24,12 @@ const IC_COLORS: Record<string,{ bg:string; bd:string; c:string }> = {
 export default function Notifications() {
   const router = useRouter();
   const [notifs, setNotifs] = useState(INIT_NOTIFS);
+
   const clear = () => setNotifs((n) => n.map((x) => ({ ...x, read: true })));
+
   return (
     <View style={st.container}>
+      {/* phdr */}
       <View style={st.phdr}>
         <Pressable style={st.bk} onPress={() => router.back()}><Text style={st.bkTx}>←</Text></Pressable>
         <Text style={st.ptitle}>Notifications</Text>
@@ -34,12 +37,17 @@ export default function Notifications() {
           <Text style={{ fontSize: 12, fontWeight: "600", color: C.dim }}>Clear all</Text>
         </Pressable>
       </View>
-      <FlatList data={notifs} keyExtractor={(n) => n.id}
+
+      <FlatList
+        data={notifs}
+        keyExtractor={(n) => n.id}
         renderItem={({ item: n }) => {
           const col = IC_COLORS[n.type] || IC_COLORS.sys;
           return (
             <Pressable style={st.row} onPress={() => setNotifs((arr) => arr.map((x) => x.id === n.id ? { ...x, read: true } : x))}>
-              <View style={[st.notifIc, { backgroundColor: col.bg, borderColor: col.bd }]}><Text style={{ color: col.c, fontSize: 18 }}>{n.ic}</Text></View>
+              <View style={[st.notifIc, { backgroundColor: col.bg, borderColor: col.bd }]}>
+                <Text style={{ color: col.c, fontSize: 18 }}>{n.ic}</Text>
+              </View>
               <View style={st.notifInfo}>
                 <Text style={st.notifTitle}>{n.title}</Text>
                 <Text style={st.notifSub}>{n.sub}</Text>
@@ -49,24 +57,26 @@ export default function Notifications() {
             </Pressable>
           );
         }}
-        contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
         ListEmptyComponent={<View style={{ padding: 40, alignItems: "center" }}><Text style={{ color: C.dim }}>No notifications</Text></View>}
       />
     </View>
   );
 }
+
 const st = StyleSheet.create({
-  container:{flex:1,backgroundColor:C.bg},
-  phdr:{ flexDirection:"row",alignItems:"center",gap:12,paddingHorizontal:20,paddingTop:56,paddingBottom:14},
-  bk:{ width:36,height:36,borderRadius:10,borderWidth:1,borderColor:C.b2,backgroundColor:C.card,alignItems:"center",justifyContent:"center"},
-  bkTx:{ color:C.dim,fontSize:17},
-  ptitle:{ flex:1,fontSize:18,fontWeight:"700",color:C.tx},
-  ib:{ height:36,borderRadius:10,borderWidth:1,borderColor:C.b2,backgroundColor:C.card,alignItems:"center",justifyContent:"center"},
-  row:{ flexDirection:"row",alignItems:"flex-start",gap:12,paddingHorizontal:20,paddingVertical:14,borderBottomWidth:1,borderBottomColor:C.border},
-  notifIc:{ width:40,height:40,borderRadius:20,borderWidth:1,alignItems:"center",justifyContent:"center"},
-  notifInfo:{ flex:1},
-  notifTitle:{ fontSize:13,fontWeight:"600",color:C.tx},
-  notifSub:{ fontSize:12,color:C.dim,marginTop:2,lineHeight:17},
-  notifTime:{ fontSize:11,color:C.dim,marginTop:3},
-  unreadDot:{ width:8,height:8,orderRadius:4,backgroundColor:C.gold,marginTop:5},
+  container: { flex: 1, backgroundColor: C.bg },
+  phdr: { flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 20, paddingTop: 56, paddingBottom: 14 },
+  bk: { width: 36, height: 36, borderRadius: 10, borderWidth: 1, borderColor: C.b2, backgroundColor: C.card, alignItems: "center", justifyContent: "center" },
+  bkTx: { color: C.dim, fontSize: 17 },
+  ptitle: { flex: 1, fontSize: 18, fontWeight: "700", color: C.tx },
+  ib: { height: 36, borderRadius: 10, borderWidth: 1, borderColor: C.b2, backgroundColor: C.card, alignItems: "center", justifyContent: "center" },
+  row: { flexDirection: "row", alignItems: "flex-start", gap: 12, paddingHorizontal: 20, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: C.border },
+  notifIc: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, alignItems: "center", justifyContent: "center" },
+  notifInfo: { flex: 1 },
+  notifTitle: { fontSize: 13, fontWeight: "600", color: C.tx },
+  notifSub: { fontSize: 12, color: C.dim, marginTop: 2, lineHeight: 17 },
+  notifTime: { fontSize: 11, color: C.dim, marginTop: 3 },
+  unreadDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: C.gold, marginTop: 5 },
 });
