@@ -7,7 +7,7 @@ import { useLocalSearchParams, router } from "expo-router";
 import { ethers } from "ethers";
 import { useWalletStore } from "@/walletStore";
 import { provider } from "@/lib/provider";
-import { executeSwap, parseAmount } from "@/lib/uniswapSwapService";
+import { executeSwap, parseAmount } from "@/lib/uniswapScwapService";
 import { TOKENS } from "@/app/constants/tokens";
 import { SWAP_FEE_PERCENTAGE } from "@/app/constants/chainConfig";
 import { C } from "@/app/theme";
