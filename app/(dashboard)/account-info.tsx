@@ -39,7 +39,7 @@ export default function AccountInfo() {
 
         {/* stat row */}
         <View style={st.statRow}>
-          {[{v:"$28,261",l:"Portfolio Value"},{v:"5",l:"Tokens"},{v:"4",l:"Transactions"}].map((s) => (
+          {[z�v:"$28,261",l:"Portfolio Value"},{v:"5",l:"Tokens"},{v:"4",l:"Transactions"}].map((s) => (
             <View key={s.l} style={st.statCard}>
               <Text style={st.statVal}>{s.v}</Text>
               <Text style={st.statLbl}>{s.l}</Text>
@@ -54,7 +54,7 @@ export default function AccountInfo() {
             {[
               { ic:"👤", lbl:"Display Name",   sub:"QNTMEX Wallet",   onPress:()=>{} },
               { ic:"📋", lbl:"Copy Address",   sub:addrShort,         onPress:()=>copy(addr,"Wallet address") },
-              { ic:"🔑", lbl:"View Private Key",sub:"Export with caution", onPress:()=>Alert.alert("Warning","Never share your private key") },
+              { ic:"🚑", lbl:"View Private Key",sub:"Export with caution", onPress:()=>Alert.alert("Warning","Never share your private key") },
               { ic:"📝", lbl:"Recovery Phrase", sub:"12 words",        onPress:()=>router.push("/(auth)/seed-backup" as any) },
             ].map((r,i,a) => (
               <Pressable key={r.lbl} style={[st.setRow, i<a.length-1&&st.setRowBorder]} onPress={r.onPress}>
