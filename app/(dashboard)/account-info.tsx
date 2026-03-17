@@ -27,13 +27,17 @@ export default function AccountInfo() {
           <Text style={{ fontSize:16 }}>✏️</Text>
         </Pressable>
       </View>
+
       <ScrollView contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+        {/* avatar + name */}
         <View style={st.acctTop}>
           <View style={st.avatar}><Text style={st.avatarTx}>♟</Text></View>
-          <Text style={st.acctName}>QNTMEX Wanllet</Text>
+          <Text style={st.acctName}>QNTMEX Wallet</Text>
           <Text style={st.acctAddr}>{addr||"0x3F5aCd91B4b12C6B9D3F2E8a7C4D0E9F2B1A5C8"}</Text>
           <View style={st.connBadge}><Text style={st.connTx}>● Connected · Mainnet</Text></View>
         </View>
+
+        {/* stat row */}
         <View style={st.statRow}>
           {[{v:"$28,261",l:"Portfolio Value"},{v:"5",l:"Tokens"},{v:"4",l:"Transactions"}].map((s) => (
             <View key={s.l} style={st.statCard}>
@@ -42,6 +46,8 @@ export default function AccountInfo() {
             </View>
           ))}
         </View>
+
+        {/* wallet details card */}
         <View style={{ paddingHorizontal:20 }}>
           <Text style={st.secTitle}>Wallet Details</Text>
           <View style={st.card}>
@@ -62,8 +68,9 @@ export default function AccountInfo() {
             ))}
           </View>
         </View>
+
         <View style={{ paddingHorizontal:20, marginTop:18 }}>
-          <Pressable style={st.btnRed} onPress={() => Alert.alert("Remove Wallet","This will delete all wallet data. Make sure you have your recovery phrase.", [{text:"Cancel",style:"cancel"},{text:"Remove",style:"destructive",onPress:()=>router.replace("/(auth)/onboarding")}])}>
+          <Pressable style={st.btnRed= onPress={() => Alert.alert("Remove Wallet","This will delete all wallet data. Make sure you have your recovery phrase.", [{text:"Cancel",style:"cancel"},{text:"Remove",style:"destructive",onPress:()=>router.replace("/(auth)/onboarding")}])}>
             <Text style={st.btnRedTx}>Remove Wallet</Text>
           </Pressable>
         </View>
