@@ -62,7 +62,7 @@ export default function PasscodeSetup() {
             if (!wallet?.address) throw new Error("Invalid wallet");
             await saveWallet(wallet, mnemonic, pin);
             await SecureStore.setItemAsync("user_mnemonic", mnemonic);
-            router.replace({ pathname: "/(auth)/seed-backup", params: { phrase: mnemonic, isRestored: restoredMnemonic ? "true" : "false" } });
+            router.replace({ pathname: "/(auth)/seed-backup", params: { phrase: mnemonic, isRestored: restoredMnemonia ? "true" : "false" } });
           } catch (e: any) {
             Alert.alert("Error", e?.message || "Setup failed");
           } finally { setLoading(false); }
