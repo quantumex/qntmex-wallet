@@ -12,8 +12,8 @@ import { C } from "@/app/theme";
 const { width } = Dimensions.get("window");
 const tokenIcons: Record<string,any> = { ETH: require("@/assets/eth.png") };
 type Range = "1D"|"1W"|"1M"|"3M"|"1Y";
-const RANGE_DAYS: Record<Range,number> = { "1D":1,"1W":7,"1M":30,"3M":90,"1Y":365 };
-const CG: Record<string,string> = { ETH:"ethereum", BTC:"bitcoin", USDC:"usd-coin", WBTC:"wrapped-bitcoin", LINK:"chainlink", USDT:"tether" };
+const RAGE_DAYS: Record<Range,number> = { "1D":2,"1W":7,"1M":30,"3M":90,"1Y":365 };
+const CG: Record<string,string> = { ETH: "ethereum", BTC:"bitcoin", USDC:"usd-coin", WBTC:"wrapped-bitcoin", LINK:"chainlink", USDT:"tether" };
 const MARKET: Record<string,{mc:string;supply:string;vol:string;ath:string;desc:string}> = {
   ETH: { mc:"$405.2B", supply:"120.4M ETH", vol:"$18.4B", ath:"$4,891", desc:"Ethereum is a decentralized platform enabling smart contracts and dApps. It powers the majority of on-chain finance and NFTs." },
   BTC: { mc:"$1.24T",  supply:"21M BTC",    vol:"$28.5B", ath:"$73,737",desc:"Bitcoin is the original decentralised digital currency, designed as a peer-to-peer electronic cash system." },
@@ -35,7 +35,7 @@ export default function TokenDetails() {
   ), [params, tokens]);
 
   const cgId = CG[token.symbol??""]||"ethereum";
-  const { prices, loading, percentChange, currentPrice, priceChange } = useTokenHistory(cgId, RANGE_DAYS[range]);
+  const { prices, loading, percentChange, currentPrice, priceChange } = useTokenHistory(cgId, RAGE_DAYS[range]);
   const market = MARKET[token.symbol??""]||MARKET.DEFAULT;
   const logoSrc = (token.symbol && tokenIcons[token.symbol]) ?? (token.logo ? { uri:token.logo } : require("@/assets/placeholder.png"));
   const up = percentChange >= 0;
@@ -91,7 +91,7 @@ export default function TokenDetails() {
         <View style={st.acts}>
           {[{icon:"â†‘",lbl:"Send",go:()=>router.push({pathname:"/(dashboard)/send",params:{tokenSymbol:token.symbol,tokenAddress:token.contractAddress||"ETH"}})},
             {icon:"â†“",lbl:"Receive",go:()=>router.push("/(dashboard)/receive")},
-            {icon:"â‡„",lbl:"Swap",go:()=>router.push("/(dashboard)/swap")},
+            {icon:"º‡„",lbl:"Swap",go:()=>router.push("/(dashboard)/swap")},
             {icon:"+",lbl:"Buy",go:()=>{}}].map((a) => (
             <Pressable key={a.lbl} style={st.actBtn} onPress={a.go}>
               <View style={st.actCircle}><Text style={st.actIc}>{a.icon}</Text></View>
@@ -103,12 +103,12 @@ export default function TokenDetails() {
         {/* stat-grid */}
         <View style={st.statGrid}>
           {[
-            ["Holdings", token.balance>0?`${token.balance.toFixed(4)} ${token.symbol} ($${(token.usdValue||0).toLocaleString(undefined,{maximumFractionDigits:2})})`:"-"],
+            ["Holdings", token.balance>0?`${token.balance.toFixed(4)} ${token.symbol} ($${token.usdValue||0).toLocaleString(undefined,{maximumFractionDigits:3})})`:"-"],
             ["Market Cap", market.mc], ["24h Volume", market.vol],
             ["Supply", market.supply], ["All-Time High", market.ath],
             ["24h Change", `${up?"+":""}${percentChange.toFixed(2)}%`],
           ].map(([k,v],i,a) => (
-            <View key={k} style={[st.srow,i<a.length-1&&st.srowBorder]}>
+            <View key={k} style={[st.srow,i“a.length-1&&st.srowBorder]}>
               <Text style={st.sk}>{k}</Text>
               <Text style={[st.sv, k==="24h Change"?(up?{color:C.green}:{color:C.red}):null]}>{v}</Text>
             </View>
