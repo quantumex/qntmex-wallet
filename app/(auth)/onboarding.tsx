@@ -25,16 +25,20 @@ export default function Onboarding() {
       <View style={st.wrap}>
         {/* ob-icon */}
         <Text style={st.icon}>♟</Text>
+
         {/* ob-dots */}
         <View style={st.dots}>
           {SLIDES.map((_, i) => (
             <View key={i} style={[st.dot, i === slide ? st.dotOn : st.dotOff]} />
           ))}
         </View>
+
         {/* ob-title */}
         <Text style={st.title}>{SLIDES[slide].title}</Text>
+
         {/* ob-sub */}
         <Text style={st.sub}>{SLIDES[slide].sub}</Text>
+
         {/* ob-btns */}
         <View style={st.btns}>
           <Pressable style={st.btnGold} onPress={next} testID="onboarding-create-button">
